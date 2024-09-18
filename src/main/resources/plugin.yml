@@ -1,0 +1,17 @@
+name: pmessage
+version: '${project.version}'
+main: com.bojarsky.pmessage.Pmessage
+api-version: '1.20'
+authors: [bojarsky]
+description: Private Messages
+commands:
+  msg:
+    description: "Send a private message"
+  w:
+    description: "Send a private message"
+  m:
+    description: "Send a private message"
+  pm:
+    description: "Send a private message"
+  r:
+    description: "Reply to the last private message"
