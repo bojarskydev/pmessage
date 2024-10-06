@@ -23,6 +23,7 @@ public class Pmessage extends JavaPlugin implements Listener {
         this.getCommand("m").setExecutor(new MsgCommandExecutor(this));
         this.getCommand("pm").setExecutor(new MsgCommandExecutor(this));
         this.getCommand("r").setExecutor(new ReplyCommandExecutor(this));
+        this.getCommand("spawn").setExecutor(new SpawnCommandExecutor());
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getScheduler().runTaskTimer(this, this::checkPlayerActivity, 0L, 20L);
         this.getLogger().info("Private Messages has been enabled!");
@@ -84,7 +85,9 @@ public class Pmessage extends JavaPlugin implements Listener {
 
         if (Boolean.TRUE.equals(playerAwayStatus.get(playerUUID))) {
             playerAwayStatus.put(playerUUID, false);
-            this.getServer().broadcastMessage(ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вернулся.");
+            if (!player.isOp()) {
+                this.getServer().broadcastMessage(ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вернулся.");
+            }
         }
     }
 
@@ -96,7 +99,9 @@ public class Pmessage extends JavaPlugin implements Listener {
             if (lastActivity != null && currentTime - lastActivity >= 120000L) {
                 if (!Boolean.TRUE.equals(playerAwayStatus.get(playerUUID))) {
                     playerAwayStatus.put(playerUUID, true);
-                    this.getServer().broadcastMessage(ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " отошёл.");
+                    if (!player.isOp()) {
+                        this.getServer().broadcastMessage(ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " отошёл.");
+                    }
                 }
             }
         }
