@@ -1,6 +1,7 @@
 package com.bojarsky.pmessage;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,7 @@ public class SpawnCommandExecutor implements CommandExecutor {
                 player.teleport(location);
             }
         } else {
-            player.sendMessage("Spawn: X=" + location.getX() + " Y=" + location.getY() + " Z=" + location.getZ());
+            player.sendMessage(ChatColor.DARK_GRAY + "Spawn:" + ChatColor.GRAY + " X=" + location.getX() + " Z=" + location.getZ());
         }
 
         return true;
