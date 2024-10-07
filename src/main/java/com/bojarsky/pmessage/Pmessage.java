@@ -1,9 +1,11 @@
 package com.bojarsky.pmessage;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,6 +45,17 @@ public class Pmessage extends JavaPlugin implements Listener {
 
     public void setLastConversation(UUID playerUUID, UUID recipientUUID) {
         lastConversations.put(playerUUID, recipientUUID);
+    }
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        Location deathLocation = player.getLocation();
+
+        int x = (int) Math.floor(deathLocation.getX());
+        int y = (int) Math.floor(deathLocation.getY());
+        int z = (int) Math.floor(deathLocation.getZ());
+
+        player.sendMessage("Координаты смерти: " + ChatColor.GREEN + "X=" + x + " Y=" + y + " Z=" + z);
     }
 
     @EventHandler

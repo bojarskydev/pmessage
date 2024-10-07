@@ -14,7 +14,7 @@ public class SpawnCommandExecutor implements CommandExecutor {
         if (!(sender instanceof Player)) return true;
 
         Player player = (Player) sender;
-        Location location = Bukkit.getWorld("world").getSpawnLocation();
+        Location location = Bukkit.getWorlds().get(0).getSpawnLocation();
 
         if (args.length > 0 && args[0].equalsIgnoreCase("tp")) {
             if (player.isOp()) {
@@ -27,7 +27,7 @@ public class SpawnCommandExecutor implements CommandExecutor {
             int x = (int) Math.floor(location.getX());
             int z = (int) Math.floor(location.getZ());
 
-            player.sendMessage(ChatColor.GRAY + "X=" + x + " Z=" + z);
+            player.sendMessage(ChatColor.GRAY + "SPAWN: X=" + x + " Z=" + z);
         }
 
         return true;
