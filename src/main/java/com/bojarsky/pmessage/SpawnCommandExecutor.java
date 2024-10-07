@@ -19,6 +19,8 @@ public class SpawnCommandExecutor implements CommandExecutor {
         if (args.length > 0 && args[0].equalsIgnoreCase("tp")) {
             if (player.isOp()) {
                 player.teleport(location);
+            } else {
+                player.sendMessage(ChatColor.RED + "У вас нет прав для выполнения данной команды!");
             }
         } else {
 
