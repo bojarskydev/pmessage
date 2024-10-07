@@ -21,7 +21,11 @@ public class SpawnCommandExecutor implements CommandExecutor {
                 player.teleport(location);
             }
         } else {
-            player.sendMessage(ChatColor.GRAY + "X=" + location.getX() + " Z=" + location.getZ());
+
+            int x = (int) Math.floor(location.getX());
+            int z = (int) Math.floor(location.getZ());
+
+            player.sendMessage(ChatColor.GRAY + "X=" + x + " Z=" + z);
         }
 
         return true;
