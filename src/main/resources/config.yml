@@ -1,0 +1,14 @@
+starter_items:
+  - material: DIAMOND_SWORD
+    amount: 1
+  - material: IRON_HELMET
+    amount: 1
+  - material: BREAD
+    amount: 10
+  - material: tfc:ceramic/jug
+    amount: 1
+    nbt:
+      tag:
+        fluid:
+          Amount: 100
+          FluidName: "minecraft:water"

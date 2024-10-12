@@ -1,15 +1,19 @@
 package com.bojarsky.pmessage;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,9 +30,60 @@ public class Pmessage extends JavaPlugin implements Listener {
         this.getCommand("pm").setExecutor(new MsgCommandExecutor(this));
         this.getCommand("r").setExecutor(new ReplyCommandExecutor(this));
         this.getCommand("spawn").setExecutor(new SpawnCommandExecutor());
+        this.getCommand("pmreload").setExecutor(new ReloadConfigCommandExecutor(this));
+        this.getCommand("starteritems").setExecutor(new StarterKitCommandExecutor(this));
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getScheduler().runTaskTimer(this, this::checkPlayerActivity, 0L, 20L);
         this.getLogger().info("Private Messages has been enabled!");
+        saveDefaultConfig();
+    }
+
+    public void giveStarterItems(Player player) {
+        FileConfiguration config = getConfig();
+        List<Map<?, ?>> items = config.getMapList("starter_items");
+
+        if (items != null) {
+            for (Map<?, ?> item : items) {
+                String materialName = (String) item.get("material");
+                int amount = (int) item.get("amount");
+
+                Material material = Material.getMaterial(materialName);
+                if (material == null) {
+                    material = BukkitTools.matchRegistry(Registry.MATERIAL, materialName);
+                }
+                if (material != null) {
+                    ItemStack itemStack = new ItemStack(material, amount);
+                    NBTItem nbtItem = new NBTItem(itemStack);
+
+                    if (item.containsKey("nbt")) {
+                        Map<?, ?> nbtTags = (Map<?, ?>) item.get("nbt");
+
+                        if (nbtTags.containsKey("tag")) {
+                            Map<?, ?> tagData = (Map<?, ?>) nbtTags.get("tag");
+                            if (tagData.containsKey("fluid")) {
+                                Map<?, ?> fluidData = (Map<?, ?>) tagData.get("fluid");
+
+                                NBTCompound fluidCompound = nbtItem.addCompound("fluid");
+
+                                for (Map.Entry<?, ?> entry : fluidData.entrySet()) {
+                                    String key = (String) entry.getKey();
+                                    Object value = entry.getValue();
+
+                                    if (key.equals("FluidName") && value instanceof String) {
+                                        fluidCompound.setString("FluidName", (String) value);
+                                    } else if (key.equals("Amount") && value instanceof Integer) {
+                                        fluidCompound.setInteger("Amount", (Integer) value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    itemStack = nbtItem.getItem();
+                    player.getInventory().addItem(itemStack);
+                }
+            }
+        }
     }
 
     @Override
@@ -38,6 +93,7 @@ public class Pmessage extends JavaPlugin implements Listener {
         playerAwayStatus.clear();
         this.getLogger().info("Private Messages has been disabled!");
     }
+
 
     public UUID getLastConversation(UUID playerUUID) {
         return lastConversations.get(playerUUID);
@@ -62,10 +118,14 @@ public class Pmessage extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         event.setJoinMessage(null);
-        String message = player.hasPlayedBefore() ?
-                ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вошёл в игру." :
-                ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вошёл в игру впервые!";
-        this.getServer().broadcastMessage(message);
+        if (!player.hasPlayedBefore()) {
+            giveStarterItems(player);
+            String message = ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вошёл в игру впервые!";
+            this.getServer().broadcastMessage(message);
+        } else {
+            String message = ChatColor.GRAY + player.getName() + ChatColor.DARK_GRAY + " вошёл в игру.";
+            this.getServer().broadcastMessage(message);
+        }
     }
 
     @EventHandler
