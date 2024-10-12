@@ -20,7 +20,7 @@ commands:
     description: "Spawn coordinates"
   pmreload:
     description: "Reloads the plugin configuration"
-  starteritems:
-    description: "Starter items"
+  sc:
+    description: "Second chance"
 
 

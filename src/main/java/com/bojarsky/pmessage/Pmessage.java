@@ -31,7 +31,7 @@ public class Pmessage extends JavaPlugin implements Listener {
         this.getCommand("r").setExecutor(new ReplyCommandExecutor(this));
         this.getCommand("spawn").setExecutor(new SpawnCommandExecutor());
         this.getCommand("pmreload").setExecutor(new ReloadConfigCommandExecutor(this));
-        this.getCommand("starteritems").setExecutor(new StarterKitCommandExecutor(this));
+        this.getCommand("sc").setExecutor(new StarterKitCommandExecutor(this));
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getScheduler().runTaskTimer(this, this::checkPlayerActivity, 0L, 20L);
         this.getLogger().info("Private Messages has been enabled!");
