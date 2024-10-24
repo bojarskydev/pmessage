@@ -22,5 +22,7 @@ commands:
     description: "Reloads the plugin configuration"
   sc:
     description: "Second chance"
+  back:
+    description: "Back"
 
 

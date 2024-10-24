@@ -1,5 +1,6 @@
 package com.bojarsky.pmessage;
 
+import com.bojarsky.pmessage.command.*;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.*;
@@ -32,6 +33,9 @@ public class Pmessage extends JavaPlugin implements Listener {
         this.getCommand("spawn").setExecutor(new SpawnCommandExecutor());
         this.getCommand("pmreload").setExecutor(new ReloadConfigCommandExecutor(this));
         this.getCommand("sc").setExecutor(new StarterKitCommandExecutor(this));
+        BackCommandExecutor backCommandExecutor = new BackCommandExecutor(this);
+        this.getCommand("back").setExecutor(backCommandExecutor);
+        this.getServer().getPluginManager().registerEvents(backCommandExecutor, this);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getScheduler().runTaskTimer(this, this::checkPlayerActivity, 0L, 20L);
         this.getLogger().info("Private Messages has been enabled!");

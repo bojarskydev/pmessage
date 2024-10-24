@@ -1,5 +1,6 @@
-package com.bojarsky.pmessage;
+package com.bojarsky.pmessage.command;
 
+import com.bojarsky.pmessage.Pmessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
